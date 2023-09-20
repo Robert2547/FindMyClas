@@ -12,14 +12,14 @@ def dashboard():
     render_template("dashboard.html")
 
 
-@app.route("/login")
-def login():
+@app.route("/signup")
+def signup():
     SignForm = RegistrationForm()
     render_template("login.html", title="Sign Up", form=SignForm)
 
 
-@app.route("/signup")
-def signup():
+@app.route("/login")
+def login():
     LoginForm = LoginIn()
     render_template("signup.html", title="Login In", form=LoginForm)
 
