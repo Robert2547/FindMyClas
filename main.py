@@ -1,7 +1,6 @@
 from flask import Flask, render_template, url_for, flash, redirect
 from forms import SignUp, LoginForm
 from flask_sqlalchemy import SQLAlchemy
-from flask_wtf import FlaskForm
 
 app = Flask(__name__) 
 app.config["SECRET_KEY"] = "dee056056241bb46c750468e771c98c2" # secret key to prevent cross-site request forgery attacks
