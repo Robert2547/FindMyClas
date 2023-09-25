@@ -44,13 +44,14 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{ url_for('login')}}" class="nav-link align-middle px-0">
+                <a href="{{ url_for('signup')}}" class="nav-link align-middle px-0">
                   <i class="fs-4 bi-house"></i>
                   <span class="ms-1 d-none d-sm-inline">Signup</span>
                 </a>
               </li>
             </ul>
             <hr />
+            {% if current_user.is_authenticated %}
             <div class="dropdown pb-4">
               <a
                 href="#"
@@ -81,6 +82,10 @@
                   <a class="dropdown-item" href="{{url_for('logout')}}">Sign out</a></li>
               </ul>
             </div>
+            {% else %}
+            <a href="{{ url_for('login')}}" class="nav-link align-middle px-0"> Login </a>
+            <a href="{{ url_for('signup')}}" class="nav-link align-middle px-0"> Signup </a>
+            {% endif %}
           </div>
         </div>
       </nav>
