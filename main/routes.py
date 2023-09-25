@@ -1,8 +1,8 @@
-from flask import render_template, url_for, flash, redirect
+from flask import render_template, url_for, flash, redirect, request
 from main import app, db, bcrypt
 from main.forms import SignForm, LoginForm
 from main.models import User, Course
-from flask_login import login_user, current_user, logout_user
+from flask_login import login_user, current_user, logout_user, login_required
 
 @app.route("/")
 @app.route("/home")
@@ -43,7 +43,9 @@ def login(): # login route
         user = User.query.filter_by(email=form.email.data).first() # check if user exist
         if user and bcrypt.check_password_hash(user.password, form.password.data): # check if password is correct
             login_user(user, remember=form.remember.data) # login user
-            return redirect(url_for('home'))# redirect to home page
+            next_page = request.args.get('next') # take user to next_page if it exist, else it will be null
+
+            return redirect(next_page) if next_page else redirect(url_for('home'))# redirect to next_page if it exist else redirect to home
         
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')# flash error message
@@ -51,5 +53,10 @@ def login(): # login route
 
 @app.route("/logout")
 def logout():
-    logout_user()
+    logout_user()#Logout user and return them to the home screen
     return redirect(url_for('home'))
+
+@app.route('/account')
+@login_required #Need user to login to access this route
+def account():
+    return render_template('account.html', title='Account')
