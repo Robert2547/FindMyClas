@@ -18,6 +18,7 @@ def signup(): # signup route
     
     form = SignForm()
 
+
     if form.validate_on_submit():# check if inout is valid
 
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')# hash password
@@ -25,7 +26,10 @@ def signup(): # signup route
         db.session.add(user)# add user to database
         db.session.commit()# commit changes
         flash(f'Your account has been created! You are now able to log in!', 'success')# flash success message
+        
         return redirect(url_for('login'))# redirect to login page
+    
+
     return render_template('signup.html', title='Register', form=form)
 
 
