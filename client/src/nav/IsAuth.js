@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Authnav from "./Authnav";
-import Nonauth from "./Nonauth";
 
-function Popup() {
+function IsAuth() {
   //This function checks if the user is login or not
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -21,10 +19,9 @@ function Popup() {
     fetchAuthStatus();
   }, []); //useEffect runs once when the component render
 
-  return (
-    //If the user is authenticated, show the Authnav component, else show the Nonauth component
-    <div>{isAuthenticated ? <Authnav /> : <Nonauth />};</div>
+  return (  
+    children(isAuthenticated) //Return the children component with the authentication status
   );
 }
   
-export default Popup;
+export default IsAuth;
