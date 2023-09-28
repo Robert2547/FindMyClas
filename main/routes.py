@@ -10,7 +10,6 @@ def home():
     return render_template('home.html')
 
 
-
 @app.route("/signup", methods=['GET', 'POST'])
 def signup(): # signup route
 
@@ -60,3 +59,7 @@ def logout():
 @login_required #Need user to login to access this route
 def account():
     return render_template('account.html', title='Account')
+
+@app.route('/authorized')
+def authorized():
+    return current_user.is_authenticated
