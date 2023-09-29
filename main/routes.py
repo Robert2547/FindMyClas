@@ -1,6 +1,6 @@
 from flask import render_template, url_for, flash, redirect, request
 from main import app, db, bcrypt
-from main.forms import SignForm, LoginForm
+from main.forms import SignForm, LoginForm, UpdateAccountForm
 from main.models import User, Course
 from flask_login import login_user, current_user, logout_user, login_required
 
@@ -54,15 +54,33 @@ def login(): # login route
             flash('Login Unsuccessful. Please check email and password', 'danger')# flash error message
     return render_template('login.html', title='Login', form=form)
 
+#This route will logout the user
 @app.route("/logout")
 def logout():
     logout_user()#Logout user and return them to the home screen
     return redirect(url_for('home'))
 
-@app.route('/account')
+#This route will display the user's account information
+@app.route('/account', methods=['GET', 'POST'])
 @login_required #Need user to login to access this route
 def account():
-    return render_template('account.html', title='Account')
+
+    form = UpdateAccountForm()#This will update the user's account information
+    
+    if form.validate_on_submit():#This will update the user's account information
+        current_user.username = form.username.data
+        current_user.email = form.email.data
+        db.session.commit()
+        flash('Your account has been updated!', 'success')
+        return redirect(url_for('account'))#Redirect user to account page after updating their account information
+    
+    elif request.method == 'GET':#This will prepopulate the form with the user's current information
+        form.username.data = current_user.username
+        form.email.data = current_user.email
+
+    image_file = url_for('static', filename='profile_pics/' + current_user.image_file)#This will display the user's profile picture
+    return render_template('account.html', title='Account', image_file=image_file, form=form)#This will render the account page
+
 
 @app.route('/authorized')
 def authorized():
