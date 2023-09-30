@@ -1,6 +1,6 @@
 import React from 'react'
 
-function Authnav() {
+function Authnav(username) {
   return (
     <div className="dropdown pb-4">
     <a

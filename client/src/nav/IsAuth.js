@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-function IsAuth() {
+function IsAuth({children}) {
   //This function checks if the user is login or not
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -12,16 +12,14 @@ function IsAuth() {
 
         setIsAuthenticated(response.data.authenticated); //Set state to response (True or False)
       } catch (error) {
-        console.error("Error fetching authentication!"), error;
+        console.error(`Error fetching authentication! ${error}`);
       }
     };
 
     fetchAuthStatus();
   }, []); //useEffect runs once when the component render
 
-  return (  
-    children(isAuthenticated) //Return the children component with the authentication status
-  );
+    return children(isAuthenticated);//Return the children component with the isAuthenticated state
 }
-  
+
 export default IsAuth;

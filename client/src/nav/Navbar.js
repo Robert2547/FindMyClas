@@ -48,12 +48,10 @@ function Navbar() {
               </li>
             </ul>
             <hr />
-            //If the user is authenticated, show the Authnav component, else
-            show the Nonauth component
             <div>
               <IsAuth>
                 {(isAuthenticated) =>
-                  isAuthenticated ? <Authnav /> : <Nonauth />
+                  isAuthenticated ? <Authnav username="Demo Username"/> : <Nonauth />
                 }
               </IsAuth>
             </div>
