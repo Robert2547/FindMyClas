@@ -1,6 +1,6 @@
-from flask import render_template, url_for, flash, redirect, request
+from flask import jsonify, render_template, url_for, flash, redirect, request
 from main import app, db, bcrypt
-from main.forms import SignForm, LoginForm, UpdateAccountForm
+from main.forms import SignForm, LoginForm, UpdateAccountForm, AccountForm
 from main.models import User, Course
 from flask_login import login_user, current_user, logout_user, login_required
 
@@ -41,18 +41,21 @@ def login(): # login route
     
     form = LoginForm()
 
-    if form.validate_on_submit(): # check if inout is valid
+    if form.validate_on_submit(): # check if input is valid
 
         user = User.query.filter_by(email=form.email.data).first() # check if user exist
         if user and bcrypt.check_password_hash(user.password, form.password.data): # check if password is correct
             login_user(user, remember=form.remember.data) # login user
             next_page = request.args.get('next') # take user to next_page if it exist, else it will be null
 
-            return redirect(next_page) if next_page else redirect(url_for('home'))# redirect to next_page if it exist else redirect to home
+            #return redirect(next_page) if next_page else redirect(url_for('home'))# redirect to next_page if it exist else redirect to home
         
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')# flash error message
-    return render_template('login.html', title='Login', form=form)
+            #return something here that will redirect user to login page
+        
+    #return render_template('login.html', title='Login', form=form)
+    return form
 
 #This route will logout the user
 @app.route("/logout")
@@ -61,7 +64,7 @@ def logout():
     return redirect(url_for('home'))
 
 #This route will display the user's account information
-@app.route('/account', methods=['GET', 'POST'])
+@app.route('/update', methods=['GET', 'POST'])
 @login_required #Need user to login to access this route
 def account():
 
@@ -80,6 +83,26 @@ def account():
 
     image_file = url_for('static', filename='profile_pics/' + current_user.image_file)#This will display the user's profile picture
     return render_template('account.html', title='Account', image_file=image_file, form=form)#This will render the account page
+
+@app.route('/account', methods=['GET', 'POST'])
+def account():
+
+    form = AccountForm()
+    
+    # Populate the form fields with the current user's data
+    form.username.data = current_user.username
+    form.email.data = current_user.email
+    form.profile_image.data = current_user.profile_image  # Assuming profile_image is a field in your User model
+
+    # Convert the form data to a dictionary
+    account_data = {
+        'username': form.username.data,
+        'email': form.email.data,
+        'profile_image': form.profile_image.data,
+    }
+
+    # Return the account data as JSON
+    return jsonify(account_data)
 
 
 @app.route('/authorized')
