@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-function useForm() {
+function useFetch() {
   const [values, setValues] = useState(null);
   const [pending, setPending] = useState(true);
   const [errors, setErrors] = useState(null);
@@ -38,4 +38,4 @@ function useForm() {
   return { values, pending, errors };
 }
 
-export default useForm;
+export default useFetch;

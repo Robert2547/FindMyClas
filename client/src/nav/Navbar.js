@@ -1,10 +1,12 @@
 import React from "react";
 import Authnav from "./Authnav";
 import Nonauth from "./Nonauth";
-import IsAuth from "./IsAuth";
+import useFetch from "../hooks/useFetch";
 import { Link } from "react-router-dom";
 
 function Navbar() {
+  const { values: isAuthenticated, pending, errors } = useFetch("/authorized");
+
   return (
     <div className="container-fluid">
       <div className="row flex-nowrap">
@@ -41,15 +43,15 @@ function Navbar() {
             </ul>
             <hr />
             <div>
-              <IsAuth>
-                {(isAuthenticated) =>
-                  isAuthenticated ? (
-                    <Authnav username="Demo Username" />
-                  ) : (
-                    <Nonauth />
-                  )
-                }
-              </IsAuth>
+              {pending ? (
+                <div>Loading...</div>
+              ) : errors ? (
+                <div>Error: {errors}</div>
+              ) : isAuthenticated ? (
+                <Authnav username="Demo Username" />
+              ) : (
+                <Nonauth />
+              )}
             </div>
           </div>
         </div>
