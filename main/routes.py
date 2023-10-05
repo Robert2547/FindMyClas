@@ -66,7 +66,7 @@ def logout():
 #This route will display the user's account information
 @app.route('/update', methods=['GET', 'POST'])
 @login_required #Need user to login to access this route
-def account():
+def update():
 
     form = UpdateAccountForm()#This will update the user's account information
     
@@ -84,25 +84,18 @@ def account():
     image_file = url_for('static', filename='profile_pics/' + current_user.image_file)#This will display the user's profile picture
     return render_template('account.html', title='Account', image_file=image_file, form=form)#This will render the account page
 
-@app.route('/account', methods=['GET', 'POST'])
-def account():
+@app.route('/account', methods=['GET']) #This route will display the user's account information
+@login_required #Need user to login to access this route
+def get_current_user():
 
-    form = AccountForm()
-    
-    # Populate the form fields with the current user's data
-    form.username.data = current_user.username
-    form.email.data = current_user.email
-    form.profile_image.data = current_user.profile_image  # Assuming profile_image is a field in your User model
-
-    # Convert the form data to a dictionary
-    account_data = {
-        'username': form.username.data,
-        'email': form.email.data,
-        'profile_image': form.profile_image.data,
+    user_data = {
+        'id': current_user.id,
+        'username': current_user.username,
+        'email': current_user.email,
+        'profile_image': current_user.profile_image,
     }
-
-    # Return the account data as JSON
-    return jsonify(account_data)
+    
+    return jsonify(user_data)
 
 
 @app.route('/authorized')

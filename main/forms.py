@@ -72,9 +72,3 @@ class UpdateAccountForm(FlaskForm):  # update account form
         if user:  # If username already exist throw validation error
             raise ValidationError("That email is taken. Please choose a different one")
         
-class AccountForm(FlaskForm): #This will display the user's account information
-    username = StringField("Username", render_kw={"readonly": True}) 
-    email = StringField("Email", render_kw={"readonly": True})
-    profile_image = StringField("Profile Image", render_kw={"readonly": True})
-    
-
