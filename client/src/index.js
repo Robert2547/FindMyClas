@@ -2,8 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import Navbar from "./nav/Navbar";
 import Home from "./Home";
-
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -11,9 +10,9 @@ root.render(
     <Router>
       <Navbar />
       <div className="container">
-        <Switch>
+        <Routes>
           <Route exact path="/" component={Home}/>
-        </Switch>
+        </Routes>
       </div>
     </Router>
   </React.StrictMode>
