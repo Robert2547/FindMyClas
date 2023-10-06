@@ -1,6 +1,6 @@
 from flask import jsonify, render_template, url_for, flash, redirect, request
 from main import app, db, bcrypt
-from main.forms import SignForm, LoginForm, UpdateAccountForm, AccountForm
+from main.forms import SignForm, LoginForm, UpdateAccountForm
 from main.models import User, Course
 from flask_login import login_user, current_user, logout_user, login_required
 
@@ -54,8 +54,7 @@ def login(): # login route
             flash('Login Unsuccessful. Please check email and password', 'danger')# flash error message
             #return something here that will redirect user to login page
         
-    #return render_template('login.html', title='Login', form=form)
-    return form
+    return render_template('login.html', title='Login', form=form)
 
 #This route will logout the user
 @app.route("/logout")
@@ -84,18 +83,19 @@ def update():
     image_file = url_for('static', filename='profile_pics/' + current_user.image_file)#This will display the user's profile picture
     return render_template('account.html', title='Account', image_file=image_file, form=form)#This will render the account page
 
-@app.route('/account', methods=['GET']) #This route will display the user's account information
+@app.route('/account', methods=['GET', 'POST']) #This route will display the user's account information
 @login_required #Need user to login to access this route
-def get_current_user():
+def account():
 
     user_data = {
         'id': current_user.id,
         'username': current_user.username,
         'email': current_user.email,
-        'profile_image': current_user.profile_image,
+        #'profile_image': current_user.profile_image,
     }
     
-    return jsonify(user_data)
+    #return jsonify(user_data)
+    return render_template('current.html', user_data=user_data)
 
 
 @app.route('/authorized')
