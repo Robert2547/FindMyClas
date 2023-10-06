@@ -4,17 +4,13 @@ from main.forms import SignForm, LoginForm, UpdateAccountForm
 from main.models import User, Course
 from flask_login import login_user, current_user, logout_user, login_required
 
-@app.route("/")
-@app.route("/home")
-def home():
-    return render_template('home.html')
 
 
 @app.route("/signup", methods=['GET', 'POST'])
 def signup(): # signup route
 
     if current_user.is_authenticated: # check if user already login
-        return redirect(url_for('home'))
+        return redirect('/')
     
     form = SignForm()
 
@@ -27,10 +23,9 @@ def signup(): # signup route
         db.session.commit()# commit changes
         flash(f'Your account has been created! You are now able to log in!', 'success')# flash success message
         
-        return redirect(url_for('login'))# redirect to login page
-    
+        return redirect('/login')# redirect to login page
 
-    return render_template('signup.html', title='Register', form=form)
+    return form
 
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -91,12 +86,10 @@ def account():
         'id': current_user.id,
         'username': current_user.username,
         'email': current_user.email,
-        #'profile_image': current_user.profile_image,
+        'profile_image': current_user.profile_image
     }
     
-    #return jsonify(user_data)
-    return render_template('current.html', user_data=user_data)
-
+    return jsonify(user_data)
 
 @app.route('/authorized')
 def authorized():
