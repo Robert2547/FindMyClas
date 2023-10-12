@@ -1,7 +1,7 @@
 from flask import jsonify, render_template, url_for, flash, redirect, request
-from main import app, db, bcrypt
-from main.forms import SignForm, LoginForm, UpdateAccountForm
-from main.models import User, Course
+from backend import app, db, bcrypt
+from backend.forms import SignForm, LoginForm, UpdateAccountForm
+from backend.models import User, Course
 from flask_login import login_user, current_user, logout_user, login_required
 
 

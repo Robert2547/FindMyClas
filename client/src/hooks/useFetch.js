@@ -1,41 +1,43 @@
 import { useState, useEffect } from "react";
 
-function useFetch() {
-  const [values, setValues] = useState(null);
-  const [pending, setPending] = useState(true);
-  const [errors, setErrors] = useState(null);
+const useFetch = (url) => {
+  const [data, setData] = useState(null);
+  const [isPending, setIsPending] = useState(true);
+  const [error, setError] = useState(null);
 
-  useEffect(
-    (url) => {
-      const abortFetch = new AbortController();
-      fetch(url, { signal: abortFetch.signal })
+  useEffect(() => {
+    const abortCont = new AbortController();
+
+    setTimeout(() => {
+      fetch(url, { signal: abortCont.signal })
         .then((res) => {
           if (!res.ok) {
-            throw Error("Could not fetch data for that resource");
+            // error coming back from server
+            throw Error("could not fetch the data for that resource");
           }
-          res.json();
+          return res.json();
         })
         .then((data) => {
-          setValues(data);
-          setPending(false);
-          setErrors(null);
+          setIsPending(false);
+          setData(data);
+          setError(null);
         })
         .catch((err) => {
-          // if the fetch is aborted, don't update state
           if (err.name === "AbortError") {
             console.log("fetch aborted");
           } else {
-            // otherwise, update state
-            setPending(false);
-            setErrors(err.message);
+            // auto catches network / connection error
+            setIsPending(false);
+            setError(err.message);
           }
         });
-      return () => abortFetch.abort(); // abort the fetch
-    },
-    [url]
-  );
+    }, 1000);
 
-  return { values, pending, errors };
-}
+    // abort the fetch
+    return () => abortCont.abort();
+  }, [url]);
+
+  return { data, isPending, error };
+};
 
 export default useFetch;
