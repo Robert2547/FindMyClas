@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const SignupForm = () => {
   const [username, setUsername] = useState("");
@@ -6,6 +6,29 @@ const SignupForm = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [csrfToken, setCsrfToken] = useState(""); // State to store the CSRF token
+
+  // Fetch CSRF token from the server
+  useEffect(() => {
+    const fetchCsrfToken = async () => {
+      try {
+        const response = await fetch("/get_csrf_token", {
+          method: "GET",
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setCsrfToken(data.csrf_token);
+        } else {
+          console.error("Failed to fetch CSRF token");
+        }
+      } catch (error) {
+        console.error("Error fetching CSRF token:", error);
+      }
+    };
+
+    fetchCsrfToken();
+  }, []); // Run once when the component mounts
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,14 +39,21 @@ const SignupForm = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "X-CSRFToken": csrfToken, // Include CSRF token in headers
         },
-        body: JSON.stringify({ username, email, password, confirmPassword }),
+        body: JSON.stringify({
+          username,
+          email,
+          password,
+          confirm_password: confirmPassword,
+          csrf_token: csrfToken,
+        }),
       });
 
       if (!response.ok) {
         console.error("Failed to sign up. Status:", response.status);
 
-        // Handle non-JSON response (optional)
+        // Handle non-JSON response
         const text = await response.text();
         console.log("Non-JSON response:", text);
 

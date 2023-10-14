@@ -3,6 +3,13 @@ from backend import app, db, bcrypt
 from backend.forms import SignForm, LoginForm, UpdateAccountForm
 from backend.models import User, Course
 from flask_login import login_user, current_user, logout_user, login_required
+from flask_wtf.csrf import CSRFError, generate_csrf, validate_csrf
+
+
+@app.route("/get_csrf_token", methods=["GET", "POST"])
+def get_csrf_token():
+    csrf_token = generate_csrf()
+    return jsonify({"csrf_token": csrf_token})
 
 
 @app.route("/signup", methods=["POST", "GET"])
@@ -17,36 +24,42 @@ def signup():  # signup route
     email = data.get("email")
     password = data.get("password")
     confirm_password = data.get("confirm_password")
+    csrf_token = data.get("csrf_token")
 
-    form = SignForm(
-        data={
-            "username": username,
-            "email": email,
-            "password": password,
-            "confirm_password": confirm_password,
-        }
-    )
-    app.logger.info("Form is: ")
-    app.logger.info(form.data)
+    try:
+        validate_csrf(csrf_token)
 
-    if form.validate():  # check if inout is valid
-        app.logger.info("Form is valid")
+        form = SignForm(
+            data={
+                "username": username,
+                "email": email,
+                "password": password,
+                "confirm_password": confirm_password,
+            }
+        )
+
+        # Manually trigger form validation
+        form.validate()
+
+        if form.errors:  # Check for validation errors
+            errors = {field.name: field.errors for field in form}
+            return jsonify({"errors": errors}), 400
+
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode(
             "utf-8"
-        )  # hash password
+        )
         user = User(username=username, email=email, password=hashed_password)
-        db.session.add(user)  # add user to database
-        db.session.commit()  # commit changes
-        flash(f"Your account has been created! You are now able to log in!", "success")
+        db.session.add(user)
+        db.session.commit()
+        flash("Your account has been created! You can now log in.", "success")
         return (
             jsonify({"message": "Your account has been created! You can now log in."}),
             200,
         )
-    else:
-        # Handle form validation errors
 
-        errors = {field.name: field.errors for field in form}
-        return jsonify({"errors": errors}), 400
+    except CSRFError:  # Handle CSRF validation error
+        app.logger.error("CSRF validation failed")
+        return jsonify({"error": "CSRF validation failed"}), 400
 
 
 @app.route("/login", methods=["GET", "POST"])
