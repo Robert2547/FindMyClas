@@ -1,10 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import SignUpForm from "./TestSign";
+import SignUp from "./form/SignUp"
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <SignUpForm/>
+    <SignUp/>
   </React.StrictMode>
 );
