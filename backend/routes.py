@@ -64,34 +64,22 @@ def signup():  # signup route
         return jsonify({"error": "CSRF validation failed"}), 400
 
 
-@app.route("/login", methods=["GET", "POST"])
-def login():  # login route
-    if current_user.is_authenticated:  # check if user already login
-        return redirect(url_for("home"))
+@app.route("/login", methods=["POST"])
+def login():
+    if current_user.is_authenticated:
+        return redirect("/")
 
-    form = LoginForm()
+    data = request.get_json()
+    form = LoginForm(data=data)
 
-    if form.validate_on_submit():  # check if input is valid
-        user = User.query.filter_by(
-            email=form.email.data
-        ).first()  # check if user exist
-        if user and bcrypt.check_password_hash(
-            user.password, form.password.data
-        ):  # check if password is correct
-            login_user(user, remember=form.remember.data)  # login user
-            next_page = request.args.get(
-                "next"
-            )  # take user to next_page if it exist, else it will be null
+    if form.validate():
+        user = User.query.filter_by(email=form.email.data).first()
 
-            # return redirect(next_page) if next_page else redirect(url_for('home'))# redirect to next_page if it exist else redirect to home
+        if user and bcrypt.check_password_hash(user.password, form.password.data):
+            login_user(user, remember=form.remember.data)
+            return jsonify({"message": "Login successful"})
 
-        else:
-            flash(
-                "Login Unsuccessful. Please check email and password", "danger"
-            )  # flash error message
-            # return something here that will redirect user to login page
-
-    return render_template("login.html", title="Login", form=form)
+    return jsonify({"message": "Login unsuccessful. Check email and password"}), 401
 
 
 # This route will logout the user
