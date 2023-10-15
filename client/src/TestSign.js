@@ -1,91 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
+import useForm from "./hooks/useForm";
 
 const SignupForm = () => {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [messages, setMessages] = useState("");
-  const [csrfToken, setCsrfToken] = useState(""); // State to store the CSRF token
-
-  // Fetch CSRF token from the server
-  useEffect(() => {
-    const fetchCsrfToken = async () => {
-      try {
-        const response = await fetch("/get_csrf_token", {
-          method: "GET",
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setCsrfToken(data.csrf_token);
-        } else {
-          console.error("Failed to fetch CSRF token");
-        }
-      } catch (error) {
-        console.error("Error fetching CSRF token:", error);
-      }
-    };
-
-    fetchCsrfToken();
-  }, []); // Run once when the component mounts
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    console.log("Form submitted!");
-
-    try {
-      const response = await fetch("/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRFToken": csrfToken, // Include CSRF token in headers
-        },
-        body: JSON.stringify({
-          username,
-          email,
-          password,
-          confirm_password: confirmPassword,
-          csrf_token: csrfToken,
-        }),
-      });
-
-      if (!response.ok) {
-        console.error("Failed to sign up. Status:", response.status);
-
-        const data = await response.json();
-
-        if (data.errors) {
-          // Display validation errors to the user
-          setMessages(Object.values(data.errors).flat());
-        } else {
-          setMessages(["Signup fail. Please check your input"]);
-        }
-        return;
-      }
-
-      console.log("Response received from server:", response);
-      const data = await response.json();
-
-      // Log data received from the server
-      console.log("Data received:", data);
-
-      // Handle success or error messages from the server
-      if (response.status === 200) {
-        setMessages("Signup successful! You can now log in.");
-        // Optionally, you can clear the form fields here
-        setUsername("");
-        setEmail("");
-        setPassword("");
-        setConfirmPassword("");
-      } else {
-        setMessages("");
-      }
-    } catch (error) {
-      console.error("Error during signup:", error);
-      setMessages("Signup fail. Please check your input");
-    }
-  };
+  const {
+    username,
+    setUsername,
+    email,
+    setEmail,
+    password,
+    setPassword,
+    confirmPassword,
+    setConfirmPassword,
+    messages,
+    handleSubmit,
+  } = useForm("/signup"); // Specify the signup endpoint
 
   return (
     <div className="container mt-5">
