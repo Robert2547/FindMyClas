@@ -23,7 +23,7 @@ class SignForm(FlaskForm):  # signup form
 
         if user:  # If username already exist throw validation error
             raise ValidationError(
-                "That username is taken. Please choose a different one"
+                "This username has already been taken!\n"
             )
 
     # Custom validation for email
@@ -32,7 +32,7 @@ class SignForm(FlaskForm):  # signup form
         user = User.query.filter_by(email=email.data).first()
 
         if user:  # If username already exist throw validation error
-            raise ValidationError("That email is taken. Please choose a different one")
+            raise ValidationError("This email has already been taken!\n")
 
 
 class LoginForm(FlaskForm):  # login form

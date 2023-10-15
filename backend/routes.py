@@ -43,6 +43,8 @@ def signup():  # signup route
 
         if form.errors:  # Check for validation errors
             errors = {field.name: field.errors for field in form}
+            app.logger.info("errors: %s", errors)
+            flash("Signup Unsuccessful. Please check your input", "danger")
             return jsonify({"errors": errors}), 400
 
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode(

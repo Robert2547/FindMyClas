@@ -5,7 +5,7 @@ const SignupForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
+  const [messages, setMessages] = useState("");
   const [csrfToken, setCsrfToken] = useState(""); // State to store the CSRF token
 
   // Fetch CSRF token from the server
@@ -53,11 +53,14 @@ const SignupForm = () => {
       if (!response.ok) {
         console.error("Failed to sign up. Status:", response.status);
 
-        // Handle non-JSON response
-        const text = await response.text();
-        console.log("Non-JSON response:", text);
+        const data = await response.json();
 
-        setSuccessMessage(""); // Clear success message
+        if (data.errors) {
+          // Display validation errors to the user
+          setMessages(Object.values(data.errors).flat());
+        } else {
+          setMessages(["Signup fail. Please check your input"]);
+        }
         return;
       }
 
@@ -69,26 +72,31 @@ const SignupForm = () => {
 
       // Handle success or error messages from the server
       if (response.status === 200) {
-        setSuccessMessage("Signup successful! You can now log in.");
+        setMessages("Signup successful! You can now log in.");
         // Optionally, you can clear the form fields here
         setUsername("");
         setEmail("");
         setPassword("");
         setConfirmPassword("");
       } else {
-        setSuccessMessage("");
+        setMessages("");
       }
     } catch (error) {
       console.error("Error during signup:", error);
-      setSuccessMessage("");
+      setMessages("Signup fail. Please check your input");
     }
   };
 
   return (
     <div className="container mt-5">
-      {successMessage && (
-        <div className="alert alert-success" role="alert">
-          {successMessage}
+      {messages && (
+        <div
+          className={`alert ${
+            messages.includes("successful") ? "alert-success" : "alert-danger"
+          }`}
+          role="alert"
+        >
+          {messages}
         </div>
       )}
       <form onSubmit={handleSubmit}>
@@ -99,6 +107,7 @@ const SignupForm = () => {
           <input
             type="text"
             className="form-control"
+            required={true}
             id="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
@@ -111,6 +120,7 @@ const SignupForm = () => {
           <input
             type="email"
             className="form-control"
+            required={true}
             id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -123,6 +133,7 @@ const SignupForm = () => {
           <input
             type="password"
             className="form-control"
+            required={true}
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -135,6 +146,7 @@ const SignupForm = () => {
           <input
             type="password"
             className="form-control"
+            required={true}
             id="confirmPassword"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
