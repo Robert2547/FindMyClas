@@ -12,9 +12,11 @@ const App = () => {
   const pathsToHideNavbar = ["/login", "/signup"];
 
   // Check if the current location's path is in the array
+  const shouldHideNavbar = pathsToHideNavbar.includes(location.pathname);
   return (
     <div>
       {/* Other components or layout can go here */}
+      {!shouldHideNavbar && <Navbar />}
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
