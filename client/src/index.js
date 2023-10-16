@@ -1,11 +1,13 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import SignUp from "./form/SignUp"
-import Login from "./form/Login"
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter as Router } from 'react-router-dom'; // Import BrowserRouter
+import App from './App';
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <SignUp />
+    <Router>
+      <App />
+    </Router>
   </React.StrictMode>
 );

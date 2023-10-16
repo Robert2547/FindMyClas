@@ -1,6 +1,7 @@
 import React from "react";
 import useForm from "../hooks/useForm";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const SignupForm = () => {
   const {
@@ -75,7 +76,7 @@ const SignupForm = () => {
             onClick={() => setShowPassword(!showPassword)}
             style={{
               position: "absolute",
-              top: "40.7%",
+              top: "40.6%",
               right: "9%",
               cursor: "pointer",
               color: "lightgray",
@@ -100,7 +101,7 @@ const SignupForm = () => {
             onClick={() => setShowConfirm(!showConfirm)}
             style={{
               position: "absolute",
-              top: "54%",
+              top: "53.9%",
               right: "9%",
               cursor: "pointer",
               color: "lightgray",
@@ -111,6 +112,11 @@ const SignupForm = () => {
           Sign Up
         </button>
       </form>
+      {/* Redirect to Login Section */}
+      <div className="mt-3">
+        <p>Already have an account?</p>
+        <Link to="/login">Log In Here</Link>
+      </div>
     </div>
   );
 };

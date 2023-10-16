@@ -29,7 +29,7 @@ function Navbar() {
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="/" className="nav-link align-middle px-0">
+                <Link to="/login" className="nav-link align-middle px-0">
                   <i className="fs-4 bi-house"></i>
                   <span className="ms-1 d-none d-sm-inline">Login</span>
                 </Link>

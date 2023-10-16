@@ -1,6 +1,7 @@
 import React from "react";
 import useForm from "../hooks/useForm";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const LoginForm = () => {
   const { email, setEmail, password, setPassword, messages, handleSubmit } =
@@ -52,7 +53,8 @@ const LoginForm = () => {
               onClick={() => setShowPassword(!showPassword)}
               style={{
                 position: "absolute",
-                right: "1%",
+                top: "29%",
+                right: "2%",
                 cursor: "pointer",
                 color: "lightgray",
               }}
@@ -67,7 +69,7 @@ const LoginForm = () => {
       {/* Signup Section */}
       <div className="mt-3">
         <p>Don't have an account?</p>
-        <a href="/signup">Sign Up Here</a>
+        <Link to="/signup">Sign Up Here</Link>
       </div>
     </div>
   );
