@@ -6,6 +6,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 from flask_wtf.csrf import CSRFError, generate_csrf, validate_csrf
 
 
+
 @app.route("/get_csrf_token", methods=["GET", "POST"])
 def get_csrf_token():
     csrf_token = generate_csrf()
@@ -127,12 +128,6 @@ def account():
         "id": current_user.id,
         "username": current_user.username,
         "email": current_user.email,
-        "profile_image": current_user.profile_image,
     }
 
     return jsonify(user_data)
-
-
-@app.route("/authorized")
-def authorized():
-    return current_user.is_authenticated

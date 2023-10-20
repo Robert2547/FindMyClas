@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 const SignupForm = () => {
+  console.log("SignupForm");
   const {
     username,
     setUsername,
@@ -16,6 +17,7 @@ const SignupForm = () => {
     messages,
     handleSubmit,
   } = useForm("/signup");
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
@@ -108,7 +110,10 @@ const SignupForm = () => {
             }}
           ></i>
         </div>
-        <button type="submit" className="btn btn-primary">
+        <button
+          type="submit"
+          className="btn btn-primary"
+        >
           Sign Up
         </button>
       </form>

@@ -1,11 +1,15 @@
-import React from 'react'
+import React from "react";
+import useFetch from "./hooks/useFetch";
+import UserInfo from "./account/UserInfo";
 
 function Home() {
+  const { data: user, pending, error } = useFetch("/account");
+
   return (
-    <div>
-      <h1>Hello World</h1>
+    <div className="centered-container">
+      <UserInfo user={user} pending={pending} error={error} />
     </div>
-  )
+  );
 }
 
-export default Home
+export default Home;

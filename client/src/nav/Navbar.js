@@ -1,11 +1,10 @@
 import React from "react";
-import Authnav from "./Authnav";
-import Nonauth from "./Nonauth";
-import useFetch from "../hooks/useFetch";
+import NavUser from "./NavUser";
 import { Link } from "react-router-dom";
+import useFetch from "../hooks/useFetch";
 
 function Navbar() {
-  const { values: isAuthenticated, pending, errors } = useFetch("/authorized");
+  const { data: user, pending, error } = useFetch("/account");
 
   return (
     <div className="container-fluid">
@@ -58,15 +57,7 @@ function Navbar() {
             </ul>
             <hr />
             <div>
-              {pending ? (
-                <div>Loading...</div>
-              ) : errors ? (
-                <div>Error: {errors}</div>
-              ) : isAuthenticated ? (
-                <Authnav username="Demo Username" />
-              ) : (
-                <Nonauth />
-              )}
+              <NavUser user={user} pending={pending} error={error} />
             </div>
           </div>
         </div>

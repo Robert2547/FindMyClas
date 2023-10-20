@@ -1,9 +1,14 @@
 import React from "react";
-import useFetch from "../hooks/useFetch";
 import { Link } from "react-router-dom";
 
-function Authnav() {
-  const { values: account, pending, errors } = useFetch("/account");
+function Authnav({ user, pending, error }) {
+  if (pending) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
   return (
     <div className="dropdown pb-4">
       <a
@@ -13,28 +18,14 @@ function Authnav() {
         data-bs-toggle="dropdown"
         aria-expanded="false"
       >
-        {pending ? (
-          <div>Loading...</div>
-        ) : errors ? (
-          <div>Error: {errors}</div>
-        ) : (
-          <img
-            src={account.profile_image.data}
-            alt="hugenerd"
-            width="30"
-            height="30"
-            className="rounded-circle"
-          />
-        )}
-        {pending ? (
-          <div>Loading...</div>
-        ) : errors ? (
-          <div>Error: {errors}</div>
-        ) : (
-          <span className="d-none d-sm-inline mx-1">
-            {account.username.data}
-          </span>
-        )}
+        {/*<img
+          src={user.profile_image}
+          alt="hugenerd"
+          width="30"
+          height="30"
+          className="rounded-circle"
+        />*/}
+        <span className="d-none d-sm-inline mx-1">{user.username}</span>
       </a>
       <ul
         className="dropdown-menu dropdown-menu-dark text-small shadow"
