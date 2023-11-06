@@ -16,13 +16,16 @@ const App = () => {
   return (
     <div>
       {/* Other components or layout can go here */}
-      {!shouldHideNavbar && <Navbar />}
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/" element={<Home />} />
-        {/* Add more routes as needed */}
-      </Routes>
+      <div className="page-content">
+        {!shouldHideNavbar && <Navbar />}
+
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/" element={<Home />} />
+          {/* Add more routes as needed */}
+        </Routes>
+      </div>
     </div>
   );
 };

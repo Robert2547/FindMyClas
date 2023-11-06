@@ -50,6 +50,7 @@ const useForm = (endpoint) => {
       });
 
       if (!response.ok) {
+        console.log("Response received from server:", response);
         console.error("Authentication failed. Status:", response.status);
 
         const data = await response.json();
@@ -57,7 +58,7 @@ const useForm = (endpoint) => {
         if (data.errors) {
           setMessages(Object.values(data.errors).flat());
         } else {
-          setMessages(["Authentication failed. Please check your input"]);
+          setMessages(["Authentication failed. ", data.errors]);
         }
         return;
       }

@@ -41,12 +41,15 @@ def signup():  # signup route
 
         # Manually trigger form validation
         form.validate()
+        app.logger.info("form validated")
 
         if form.errors:  # Check for validation errors
             errors = {field.name: field.errors for field in form}
             app.logger.info("errors: %s", errors)
             flash("Signup Unsuccessful. Please check your input", "danger")
             return jsonify({"errors": errors}), 400
+
+        app.logger.info("form validated successfully")
 
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode(
             "utf-8"
@@ -59,10 +62,12 @@ def signup():  # signup route
             jsonify({"message": "Your account has been created! You can now log in."}),
             200,
         )
-
     except CSRFError:  # Handle CSRF validation error
         app.logger.error("CSRF validation failed")
         return jsonify({"error": "CSRF validation failed"}), 400
+    except errors:
+        app.logger.error("Signup Unsuccessful, ", errors)
+  
 
 
 @app.route("/login", methods=["POST"])
@@ -86,8 +91,8 @@ def login():
 # This route will logout the user
 @app.route("/logout")
 def logout():
-    logout_user()  # Logout user and return them to the home screen
-    return redirect(url_for("home"))
+    logout_user() # This will logout the user
+    return redirect("/login")
 
 
 # This route will display the user's account information

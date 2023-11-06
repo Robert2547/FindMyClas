@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 const SignupForm = () => {
-  console.log("SignupForm");
   const {
     username,
     setUsername,
@@ -64,56 +63,47 @@ const SignupForm = () => {
           <label htmlFor="password" className="form-label">
             Password:
           </label>
-          <input
-            type={showPassword ? "text" : "password"}
-            className="form-control"
-            required={true}
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <i
-            className={`fa-solid fa-eye${showPassword ? "-slash" : ""}`}
-            id="eye"
-            onClick={() => setShowPassword(!showPassword)}
-            style={{
-              position: "absolute",
-              top: "40.6%",
-              right: "9%",
-              cursor: "pointer",
-              color: "lightgray",
-            }}
-          ></i>
+          <div className="input-group">
+            <input
+              type={showPassword ? "text" : "password"}
+              className="form-control"
+              required={true}
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <button
+              type="button"
+              className="btn btn-outline-secondary"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? "Hide" : "Show"}
+            </button>
+          </div>
         </div>
         <div className="mb-3">
           <label htmlFor="confirmPassword" className="form-label">
             Confirm Password:
           </label>
-          <input
-            type={showConfirm ? "text" : "password"}
-            className="form-control"
-            required={true}
-            id="confirmPassword"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          />
-          <i
-            className={`fa-solid fa-eye${showConfirm ? "-slash" : ""}`}
-            id="eye"
-            onClick={() => setShowConfirm(!showConfirm)}
-            style={{
-              position: "absolute",
-              top: "53.9%",
-              right: "9%",
-              cursor: "pointer",
-              color: "lightgray",
-            }}
-          ></i>
+          <div className="input-group">
+            <input
+              type={showConfirm ? "text" : "password"}
+              className="form-control"
+              required={true}
+              id="confirmPassword"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+            <button
+              type="button"
+              className="btn btn-outline-secondary"
+              onClick={() => setShowConfirm(!showConfirm)}
+            >
+              {showConfirm ? "Hide" : "Show"}
+            </button>
+          </div>
         </div>
-        <button
-          type="submit"
-          className="btn btn-primary"
-        >
+        <button type="submit" className="btn btn-primary">
           Sign Up
         </button>
       </form>
