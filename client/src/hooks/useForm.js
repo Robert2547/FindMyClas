@@ -8,26 +8,27 @@ const useForm = (endpoint) => {
   const [messages, setMessages] = useState("");
   const [csrfToken, setCsrfToken] = useState("");
 
-  useEffect(() => {
-    const fetchCsrfToken = async () => {
-      try {
-        const response = await fetch("/get_csrf_token", {
-          method: "GET",
-        });
+  const fetchCsrfToken = async () => {
+    try {
+      const response = await fetch("/get_csrf_token", {
+        method: "GET",
+      });
 
-        if (response.ok) {
-          const data = await response.json();
-          setCsrfToken(data.csrf_token);
-        } else {
-          console.error("Failed to fetch CSRF token");
-        }
-      } catch (error) {
-        console.error("Error fetching CSRF token:", error);
+      if (response.ok) {
+        const data = await response.json();
+        setCsrfToken(data.csrf_token);
+        console.log("CSRF token fetched!");
+      } else {
+        console.error("Failed to fetch CSRF token");
       }
-    };
+    } catch (error) {
+      console.error("Error fetching CSRF token:", error);
+    }
+  };
 
+  if (!csrfToken) {
     fetchCsrfToken();
-  }, []);
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -50,23 +51,22 @@ const useForm = (endpoint) => {
       });
 
       if (!response.ok) {
-        console.log("Response received from server:", response);
+        console.log("Failed response received from server:", response);
         console.error("Authentication failed. Status:", response.status);
-
-        const data = await response.json();
-
-        if (data.errors) {
-          setMessages(Object.values(data.errors).flat());
-        } else {
-          setMessages(["Authentication failed. ", data.errors]);
-        }
         return;
       }
 
       console.log("Response received from server:", response);
+
       const data = await response.json();
 
       console.log("Data received:", data);
+
+      if (data.errors) {
+        setMessages(Object.values(data.errors).flat());
+      } else {
+        setMessages(["Authentication failed. ", data.errors]);
+      }
 
       if (response.status === 200) {
         setMessages("Authentication successful!");
@@ -80,7 +80,7 @@ const useForm = (endpoint) => {
       }
     } catch (error) {
       console.error("Error during authentication:", error);
-      setMessages("Authentication failed. Please check your input");
+      setMessages("Here Authentication failed. Please check your input");
     }
   };
 
